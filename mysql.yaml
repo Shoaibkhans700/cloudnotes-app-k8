@@ -3,6 +3,7 @@
 # For production, do NOT run your database as a Kubernetes workload — use
 # Amazon RDS for MySQL instead (see README.md -> EKS Database Connectivity ->
 # Production) and delete this file plus k8s/mysql-service.yaml.
+
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -11,9 +12,14 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+
+  # EKS StorageClass available in this cluster
+  storageClassName: gp2
+
   resources:
     requests:
       storage: 5Gi
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -22,66 +28,82 @@ metadata:
   namespace: cloudnotes
   labels:
     app: mysql
+
 spec:
   replicas: 1
+
   selector:
     matchLabels:
       app: mysql
+
   strategy:
     # A database should not do a rolling update across two pods sharing one
     # volume - recreate the single pod instead.
     type: Recreate
+
   template:
     metadata:
       labels:
         app: mysql
+
     spec:
       containers:
         - name: mysql
           image: mysql:8.0
+
           ports:
             - containerPort: 3306
+
           env:
             - name: MYSQL_DATABASE
               valueFrom:
                 configMapKeyRef:
                   name: cloudnotes-config
                   key: DB_NAME
+
             - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:
                   name: cloudnotes-secret
                   key: DB_USER
+
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: cloudnotes-secret
                   key: DB_PASSWORD
+
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: cloudnotes-secret
                   key: DB_PASSWORD
+
           resources:
             requests:
               cpu: "250m"
               memory: "512Mi"
+
             limits:
               cpu: "500m"
               memory: "1Gi"
+
           volumeMounts:
             - name: mysql-storage
               mountPath: /var/lib/mysql
+
           readinessProbe:
             tcpSocket:
               port: 3306
             initialDelaySeconds: 20
             periodSeconds: 10
+
           livenessProbe:
             tcpSocket:
               port: 3306
             initialDelaySeconds: 30
             periodSeconds: 15
+
       volumes:
         - name: mysql-storage
           persistentVolumeClaim:
