@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   name: cloudnotes-feature
   labels:
-    app: cloudnotes-feature
+    app: cloudnotes
