@@ -8,7 +8,7 @@ spec:
 
   source:
     repoURL: https://github.com/Shoaibkhans700/cloudnotes-app-k8.git
-    targetRevision: main
+    targetRevision: feature
     path: .
 
   destination:
