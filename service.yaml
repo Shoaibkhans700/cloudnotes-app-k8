@@ -1,0 +1,18 @@
+# Exposes CloudNotes outside the cluster via an AWS ELB (EKS provisions this
+# automatically for a LoadBalancer-type Service). For production you would
+# more commonly front this with an ALB Ingress instead - see README.md.
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudnotes-service
+  namespace: cloudnotes
+  labels:
+    app: cloudnotes
+spec:
+  type: LoadBalancer
+  selector:
+    app: cloudnotes
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080

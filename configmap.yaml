@@ -1,0 +1,15 @@
+# Non-sensitive configuration for CloudNotes.
+#
+# DB_HOST points at the in-cluster "mysql-service" Service by default, which is
+# correct for the development setup in k8s/mysql.yaml. For production, point
+# this at your Amazon RDS endpoint instead (see README.md -> EKS Database
+# Connectivity -> Production) and you can remove k8s/mysql.yaml entirely.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudnotes-config
+  namespace: cloudnotes
+data:
+  DB_HOST: "mysql-service"
+  DB_PORT: "3306"
+  DB_NAME: "notesdb"
