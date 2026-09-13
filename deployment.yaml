@@ -28,7 +28,7 @@ spec:
       containers:
         - name: cloudnotes-app
 
-          image: 641379500030.dkr.ecr.us-east-1.amazonaws.com/cloudnotesapp:37
+          image: 641379500030.dkr.ecr.us-east-1.amazonaws.com/cloudnotesapp:1
           imagePullPolicy: IfNotPresent
 
           ports:
