@@ -5,71 +5,92 @@ metadata:
   namespace: cloudnotes
   labels:
     app: cloudnotes
+
 spec:
   replicas: 2
+
   selector:
     matchLabels:
       app: cloudnotes
+
   strategy:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 0
+
   template:
     metadata:
       labels:
         app: cloudnotes
+
     spec:
       containers:
         - name: cloudnotes-app
-          # Replace with your ECR image URI once pushed, e.g.:
-          # <account-id>.dkr.ecr.<region>.amazonaws.com/cloudnotes:1.0
+
           image: 641379500030.dkr.ecr.us-east-1.amazonaws.com/cloudnotesapp:latest
           imagePullPolicy: IfNotPresent
+
           ports:
             - containerPort: 8080
+              protocol: TCP
+
           env:
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
                   name: cloudnotes-config
                   key: DB_HOST
+
             - name: DB_PORT
               valueFrom:
                 configMapKeyRef:
                   name: cloudnotes-config
                   key: DB_PORT
+
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:
                   name: cloudnotes-config
                   key: DB_NAME
+
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
                   name: cloudnotes-secret
                   key: DB_USER
+
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: cloudnotes-secret
                   key: DB_PASSWORD
+
+          # Give Spring Boot enough time to finish startup.
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            failureThreshold: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+
           readinessProbe:
             httpGet:
               path: /actuator/health
               port: 8080
-            initialDelaySeconds: 20
             periodSeconds: 10
             timeoutSeconds: 3
             failureThreshold: 3
+
           livenessProbe:
             httpGet:
               path: /actuator/health
               port: 8080
-            initialDelaySeconds: 40
             periodSeconds: 15
             timeoutSeconds: 3
             failureThreshold: 3
+
           resources:
             requests:
               cpu: "250m"
