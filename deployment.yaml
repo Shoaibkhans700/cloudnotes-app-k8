@@ -26,8 +26,7 @@ spec:
 
     spec:
       containers:
-        - name: cloudnotes-app
-
+        - name: cloudnotesapp-feature
           image: 641379500030.dkr.ecr.us-east-1.amazonaws.com/cloudnotesapp:1
           imagePullPolicy: IfNotPresent
 
