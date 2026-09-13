@@ -21,10 +21,10 @@ spec:
         app: cloudnotes
     spec:
       containers:
-        - name: cloudnotes
+        - name: cloudnotes-app
           # Replace with your ECR image URI once pushed, e.g.:
           # <account-id>.dkr.ecr.<region>.amazonaws.com/cloudnotes:1.0
-          image: cloudnotes:1.0
+          image: 641379500030.dkr.ecr.us-east-1.amazonaws.com/cloudnotesapp:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
