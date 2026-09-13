@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cloudnotes-deployment
-  namespace: cloudnotes
+  namespace: cloudnotes-feature
   labels:
     app: cloudnotes
 
