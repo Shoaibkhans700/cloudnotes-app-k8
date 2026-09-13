@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mysql-service
-  namespace: cloudnotes
+  namespace: cloudnotes_feature
   labels:
     app: mysql
 spec:
